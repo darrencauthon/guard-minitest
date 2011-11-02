@@ -78,6 +78,16 @@ describe Guard::Minitest::Runner do
         subject.new(:drb => true).drb?.must_equal true
       end
     end
+
+    describe 'spin' do
+      it 'default should be false' do
+        subject.new.spin?.must_equal false
+      end
+
+      it 'should be set' do
+        subject.new(:spin => true).spin?.must_equal true
+      end
+    end
   end
 
   describe 'run' do
@@ -170,6 +180,17 @@ describe Guard::Minitest::Runner do
           "testdrb ./test/test_minitest.rb"
         )
         runner.run(['test/test_minitest.rb'], :drb => true)
+      end
+    end
+
+    describe 'spin' do
+      it 'should run with spin' do
+        runner = subject.new(:spin => true)
+        Guard::UI.expects(:info)
+        runner.expects(:system).with(
+          'spin push ./test/test_minitest.rb'
+        )
+        runner.run(['test/test_minitest.rb'], :spin => true)
       end
     end
   end
