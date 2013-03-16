@@ -78,6 +78,9 @@ module Guard
         elsif spin?
           # https://github.com/jstorimer/spin
           cmd_parts << 'spin push'
+          paths.each do |path|
+            cmd_parts << "./#{path}"
+          end
         else
           cmd_parts << 'ruby'
           cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
