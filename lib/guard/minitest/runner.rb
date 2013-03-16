@@ -19,6 +19,7 @@ module Guard
           :rubygems           => false,
           :drb                => false,
           :test_folders       => %w[test spec],
+          :spin               => false,
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
           :cli                => ''
         }.merge(options)
@@ -53,6 +54,10 @@ module Guard
       def test_folders
         @options[:test_folders]
       end
+        
+      def spin?
+        @options[:spin]
+      end
 
       def test_file_patterns
         @options[:test_file_patterns]
@@ -67,6 +72,15 @@ module Guard
         if drb?
           cmd_parts << 'testdrb'
           cmd_parts += paths.map{ |path| "./#{path}" }
+          paths.each do |path|
+            cmd_parts << "./#{path}"
+          end
+        elsif spin?
+          # https://github.com/jstorimer/spin
+          cmd_parts << 'spin push'
+          paths.each do |path|
+            cmd_parts << "./#{path}"
+          end
         else
           cmd_parts << 'ruby'
           cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
